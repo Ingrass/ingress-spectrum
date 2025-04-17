@@ -32,7 +32,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enl Test</title>
+    <title>Ingress立场光谱 v2.0 (2025-04-17 16:30)</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
@@ -139,7 +139,7 @@
     </style>
 </head>
 <body>
-    <h1>Enl Test</h1>
+    <h1>Ingress立场光谱 v2.0 (2025-04-16 12:00)</h1>
     <form id="likertForm">
         <div id="questions"></div>
     </form>
@@ -158,40 +158,40 @@
     <table id="dimensionTable" class="dimension-table">
         <thead>
             <tr>
-                <th>维度</th>
+                <th>维度代号</th>
                 <th>标签/称号</th>
-                <th>关键词</th>
+                <th>核心关键词</th>
                 <th>特质总结</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td>A</td>
-                <td>极右翼保守主义者（秩序执行官 / Enlightened指挥体系崇拜者）</td>
+                <td>秩序执行官 / 指挥体系拥护者</td>
                 <td>阵营忠诚、组织服从、牺牲精神</td>
-                <td>典型特征是强烈的阵营意识与“服从大局”的信条。不论游戏或现实中的人际关系，只要进入战场，就只认阵营立场。他们重视战术纪律、Op执行力、指挥系统，并愿意为阵营牺牲个人利益（如奖励或现实时间）。同时，他们也对“队友背刺”“不服从指挥”“软弱行动”极度反感，是典型的“军队式战斗玩家”。</td>
+                <td>典型特征是强烈的阵营意识与“服从大局”的信条。不论游戏或现实中的人际关系，只要进入战场，就只认“行动立场”。他们重视战术纪律、Op执行力、指挥系统，并愿意为团队目标牺牲个人利益（如奖励或现实时间）。同时，他们也对“队友背刺”“不服从指挥”“软弱行动”极度反感，是典型的“军队式战斗玩家”。</td>
             </tr>
             <tr>
                 <td>B</td>
-                <td>自由意志主义者（独狼绿军 / Resistance控制批判者）</td>
+                <td>独狼玩家 / 控制体系批判者</td>
                 <td>自由行动、美学表达、反权威</td>
                 <td>这一类玩家强调的是自我主张与游戏审美，崇尚“打得爽”、“画得美”，讨厌规则束缚或高压指挥。他们是地图上的“独行者”和“街头艺术家”，追求Link形状的几何美感与个性表达，极端时甚至会主动拆掉他们眼中的“丑陋链图”。虽然他们看起来“反骨”，但也是创造力的来源。</td>
             </tr>
             <tr>
                 <td>C</td>
-                <td>社区民族主义者（地头蛇蓝军 / L8农场守卫者）</td>
+                <td>地头蛇玩家 / L8农场守卫者</td>
                 <td>社群凝聚、现实参与、地缘忠诚</td>
                 <td>这类玩家把Ingress当作现实生活的延伸：社群聚会、活动出勤、装备分发、T恤印刷……他们是社区的守护者与动员者，视XM事件为“祭典”，也最在意他人的投入程度（是否划水、是否真诚）。他们倾向构建线下社交网，认为“没有参加过大型活动的不算真正玩家”。</td>
             </tr>
             <tr>
                 <td>D</td>
-                <td>文化进步主义者（XM艺术家 / 异常链接铺场党）</td>
+                <td>XM表现主义者 / 链图构图者</td>
                 <td>社交情感、人文关怀、玩家关系</td>
                 <td>这类人将Ingress视为一种人与人之间情感与合作的交织，他们关注的不只是“胜负”，而是社群氛围、新手引导、以及朋友间的互动。他们可以包容失误、享受陪伴、欣赏文化多样性，也可能是社群中的润滑剂。他们的行为常带有软性的政治色彩：愿意牺牲输出帮助新人，或为了与朋友见面而战。</td>
             </tr>
             <tr>
                 <td>E</td>
-                <td>技术官僚主义者（MOD建构者 / 战术控全图计划者）</td>
+                <td>MOD建构者 / 战术构图主义者</td>
                 <td>战术理性、效率优化、行动中毒</td>
                 <td>这群人是“战术狂人”与“地图脑”，他们每天在脑海模拟战场、规划Op、制定Link路径。他们对Ingress有如工程师对建筑图纸那般痴迷，甚至影响日常生活（如因Portal分布调整通勤）。他们对“混乱”、“情绪化行动”、“非理性拆链”高度不满，倾向建立一种“持续优化”的冷静秩序。</td>
             </tr>
@@ -201,7 +201,7 @@
     <script>
         const sections = [
             {
-                name: "A. 极右翼保守主义者（秩序执行官 / Enlightened指挥体系崇拜者）",
+                name: "A. 秩序执行官 / 指挥体系拥护者",
                 desc: "重视阵营、规则、服从、荣誉",
                 questions: [
                     "如果官方允许付费随时换阵营，我只为了体验另一边的生活可以购买这项服务。",
@@ -222,7 +222,7 @@
                 reverseQuestions: [0, 1, 3, 4, 7, 10, 13]
             },
             {
-                name: "B. 自由意志主义者（独狼绿军 / Resistance控制批判者）",
+                name: "B. 独狼玩家 / 控制体系批判者",
                 desc: "强调个人行动自由、美感、游戏即表达",
                 questions: [
                     "我可以接受Op指挥失败，但不能接受某人完全不配合。",
@@ -243,7 +243,7 @@
                 reverseQuestions: [0, 1, 3, 5]
             },
             {
-                name: "C. 社区民族主义者（地头蛇蓝军 / L8农场守卫者）",
+                name: "C. 地头蛇玩家 / L8农场守卫者",
                 desc: "忠于本地社区、活动参与度高、强调社交连接",
                 questions: [
                     "只要不是特殊的游戏任务日，我喜欢做多重或Field art。",
@@ -264,7 +264,7 @@
                 reverseQuestions: [0, 4]
             },
             {
-                name: "D. 文化进步主义者（XM艺术家 / 异常链接铺场党）",
+                name: "D. XM表现主义者 / 链图构图者",
                 desc: "注重文化表达、人际关系、软性认同",
                 questions: [
                     "我更倾向于一个人默默地打游戏，不和其他人交流。",
@@ -285,7 +285,7 @@
                 reverseQuestions: [0, 2]
             },
             {
-                name: "E. 技术官僚主义者（MOD建构者 / 战术控全图计划者）",
+                name: "E. MOD建构者 / 战术构图主义者",
                 desc: "追求计划、优化、长期战略、工具理性",
                 questions: [
                     "我曾经为了一个关键Portal等在原地超过1小时。",
@@ -322,9 +322,9 @@
             radarChart = new Chart(ctx, {
                 type: 'radar',
                 data: {
-                    labels: sections.map(s => s.name.split('（')[0]),
+                    labels: sections.map(s => s.name.split(' / ')[0]),
                     datasets: [{
-                        label: '政治体质轮廓',
+                        label: '立场光谱轮廓',
                         data: sections.map(() => 0),
                         fill: true,
                         backgroundColor: 'rgba(0, 128, 0, 0.2)',
@@ -346,7 +346,7 @@
                     },
                     plugins: {
                         legend: { position: 'top' },
-                        title: { display: true, text: '个人政治体质光谱' }
+                        title: { display: true, text: '个人立场光谱' }
                     }
                 }
             });
