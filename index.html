@@ -1,0 +1,450 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row =>
+                    row.some(cell => cell !== '' && cell !== null && cell !== undefined)
+                );
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enl Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 10px;
+            padding: 0;
+            font-size: 16px;
+        }
+        h1 {
+            font-size: 1.5em;
+            text-align: center;
+        }
+        .section {
+            margin: 15px 0;
+        }
+        .section-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+        }
+        .section-desc {
+            font-style: italic;
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .question {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        .question p {
+            margin: 0 0 10px;
+            font-size: 0.95em;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .options label {
+            display: flex;
+            align-items: center;
+            font-size: 0.9em;
+        }
+        .options input {
+            margin-right: 10px;
+        }
+        .counts {
+            margin-top: 10px;
+            font-size: 0.85em;
+            color: #444;
+            font-weight: bold;
+        }
+        .summary-table, .dimension-table {
+            margin: 20px 0;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .summary-table th, .summary-table td, .dimension-table th, .dimension-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            font-size: 0.85em;
+        }
+        .summary-table th, .dimension-table th {
+            background: #f2f2f2;
+            font-weight: bold;
+        }
+        .radar-container {
+            margin: 20px auto;
+            max-width: 400px;
+        }
+        @media (min-width: 600px) {
+            body {
+                margin: 20px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            .section-title {
+                font-size: 1.4em;
+            }
+            .question p {
+                font-size: 1em;
+            }
+            .options {
+                flex-direction: row;
+                justify-content: space-between;
+                flex-wrap: wrap;
+            }
+            .options label {
+                font-size: 0.95em;
+            }
+            .summary-table th, .summary-table td, .dimension-table th, .dimension-table td {
+                font-size: 0.9em;
+                padding: 10px;
+            }
+            .radar-container {
+                max-width: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Enl Test</h1>
+    <form id="likertForm">
+        <div id="questions"></div>
+    </form>
+    <table id="summaryTable" class="summary-table">
+        <thead>
+            <tr>
+                <th>Section</th>
+                <th>Points</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div class="radar-container">
+        <canvas id="radarChart"></canvas>
+    </div>
+    <table id="dimensionTable" class="dimension-table">
+        <thead>
+            <tr>
+                <th>维度</th>
+                <th>标签/称号</th>
+                <th>关键词</th>
+                <th>特质总结</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>A</td>
+                <td>极右翼保守主义者（秩序执行官 / Enlightened指挥体系崇拜者）</td>
+                <td>阵营忠诚、组织服从、牺牲精神</td>
+                <td>典型特征是强烈的阵营意识与“服从大局”的信条。不论游戏或现实中的人际关系，只要进入战场，就只认阵营立场。他们重视战术纪律、Op执行力、指挥系统，并愿意为阵营牺牲个人利益（如奖励或现实时间）。同时，他们也对“队友背刺”“不服从指挥”“软弱行动”极度反感，是典型的“军队式战斗玩家”。</td>
+            </tr>
+            <tr>
+                <td>B</td>
+                <td>自由意志主义者（独狼绿军 / Resistance控制批判者）</td>
+                <td>自由行动、美学表达、反权威</td>
+                <td>这一类玩家强调的是自我主张与游戏审美，崇尚“打得爽”、“画得美”，讨厌规则束缚或高压指挥。他们是地图上的“独行者”和“街头艺术家”，追求Link形状的几何美感与个性表达，极端时甚至会主动拆掉他们眼中的“丑陋链图”。虽然他们看起来“反骨”，但也是创造力的来源。</td>
+            </tr>
+            <tr>
+                <td>C</td>
+                <td>社区民族主义者（地头蛇蓝军 / L8农场守卫者）</td>
+                <td>社群凝聚、现实参与、地缘忠诚</td>
+                <td>这类玩家把Ingress当作现实生活的延伸：社群聚会、活动出勤、装备分发、T恤印刷……他们是社区的守护者与动员者，视XM事件为“祭典”，也最在意他人的投入程度（是否划水、是否真诚）。他们倾向构建线下社交网，认为“没有参加过大型活动的不算真正玩家”。</td>
+            </tr>
+            <tr>
+                <td>D</td>
+                <td>文化进步主义者（XM艺术家 / 异常链接铺场党）</td>
+                <td>社交情感、人文关怀、玩家关系</td>
+                <td>这类人将Ingress视为一种人与人之间情感与合作的交织，他们关注的不只是“胜负”，而是社群氛围、新手引导、以及朋友间的互动。他们可以包容失误、享受陪伴、欣赏文化多样性，也可能是社群中的润滑剂。他们的行为常带有软性的政治色彩：愿意牺牲输出帮助新人，或为了与朋友见面而战。</td>
+            </tr>
+            <tr>
+                <td>E</td>
+                <td>技术官僚主义者（MOD建构者 / 战术控全图计划者）</td>
+                <td>战术理性、效率优化、行动中毒</td>
+                <td>这群人是“战术狂人”与“地图脑”，他们每天在脑海模拟战场、规划Op、制定Link路径。他们对Ingress有如工程师对建筑图纸那般痴迷，甚至影响日常生活（如因Portal分布调整通勤）。他们对“混乱”、“情绪化行动”、“非理性拆链”高度不满，倾向建立一种“持续优化”的冷静秩序。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        const sections = [
+            {
+                name: "A. 极右翼保守主义者（秩序执行官 / Enlightened指挥体系崇拜者）",
+                desc: "重视阵营、规则、服从、荣誉",
+                questions: [
+                    "如果官方允许付费随时换阵营，我只为了体验另一边的生活可以购买这项服务。",
+                    "我觉得蓝绿阵营只是形式上的划分，本质上大家都是在刷勋章。",
+                    "哪怕对面是我的现实朋友，我在游戏冲突上也绝不留情。",
+                    "我曾私下放过敌方阵营的Portal，因为现实中portal所有者是我朋友。",
+                    "我觉得Ingress不该那么强调阵营，应该加强合作的玩法。",
+                    "看到对面八级Portal建起来，我第一反应是：我要马上推倒消灭它。",
+                    "‘阵营优先’这四个字，在我心中高于任何个人需要。",
+                    "我曾因阵营队友背刺过我，而一度想退坑不玩或换敌方阵营。",
+                    "我愿意为了所属阵营的胜利，放弃限时活动奖励、甚至现实的活动安排。",
+                    "喜欢绿色/蓝色，对应的是剧情安排上所代表的理念，而不是游戏的内的玩法模式。",
+                    "我觉得大型Op太累，不如自己一个人玩ingress来得爽。",
+                    "有明确分工的战术与行动，比靠个人即兴发挥更能让我感到满足。",
+                    "涉及大型行动就是要配合、牺牲和等待指令，不能乱来。",
+                    "我更喜欢自己决定路线，而不是听‘队长’安排。"
+                ],
+                reverseQuestions: [0, 1, 3, 4, 7, 10, 13]
+            },
+            {
+                name: "B. 自由意志主义者（独狼绿军 / Resistance控制批判者）",
+                desc: "强调个人行动自由、美感、游戏即表达",
+                questions: [
+                    "我可以接受Op指挥失败，但不能接受某人完全不配合。",
+                    "我习惯在阵营调度别人行动，而不是亲自下场。",
+                    "一个人干掉一大片敌方Portal是我最爽的时刻。",
+                    "我认为自由的行动，会破坏当时整个战局。",
+                    "如果没有人指挥，我也能一个人完成所有的任务。",
+                    "在ingress行动战场的复杂局势中，我喜欢充当后勤或‘隐身辅助’。",
+                    "我link的时候，会考虑intel地图的整洁和干净，不会当胡连党。",
+                    "我曾Link过非常奇怪的图案，只为了当时觉得好玩。",
+                    "把一个区域全部覆盖让人十分舒服，盖地图是我最喜欢的事情。",
+                    "我觉得做field art（link图案）比单纯Link盖场更重要。",
+                    "Ingress地图就像街头涂鸦的画布，Link是玩家一种自我表达方式。",
+                    "杂乱无章的Link让地图看起来很丑，我会忍不住拆掉。",
+                    "规划战术的时候我不希望让intel变得很乱。",
+                    "我希望Niantic官方举办‘intel美术奖’。"
+                ],
+                reverseQuestions: [0, 1, 3, 5]
+            },
+            {
+                name: "C. 社区民族主义者（地头蛇蓝军 / L8农场守卫者）",
+                desc: "忠于本地社区、活动参与度高、强调社交连接",
+                questions: [
+                    "只要不是特殊的游戏任务日，我喜欢做多重或Field art。",
+                    "比起战术配合行动，我更在意盖场之后可以维持局面，控制多久时间。",
+                    "我会为了一个XMA或Anomaly请假、订票、飞国外。",
+                    "每次活动前我都会做准备，做资料，调整游戏装备。",
+                    "只要活动没有勋章，我可能会懒得参与。",
+                    "我是那种活动前会自印T恤或bio卡的狂热人士。",
+                    "我觉得休闲玩家也该自动享有完整的活动奖励。",
+                    "官方或阵营活动，没参加过的Ingress玩家不算真玩家。",
+                    "我会在活动中牺牲自己的时间，来帮新人玩家去获得良好的游戏体验。",
+                    "活动时，我觉得自己是间谍、战士、战术家三合一。",
+                    "如果有人挂机/划水，我会觉得他们玷污了整场ingress战局行动。",
+                    "活动当天是比生日还重要的日子。",
+                    "我和Ingress朋友每年至少线下聚会一次。",
+                    "Ingress让我认识了现实中最亲密的几位朋友。"
+                ],
+                reverseQuestions: [0, 4]
+            },
+            {
+                name: "D. 文化进步主义者（XM艺术家 / 异常链接铺场党）",
+                desc: "注重文化表达、人际关系、软性认同",
+                questions: [
+                    "我更倾向于一个人默默地打游戏，不和其他人交流。",
+                    "我在其他国家有Ingress圈的外国朋友。",
+                    "我加入各种群聊只是为了看通知，不喜欢参与聊天。",
+                    "我愿意带新人熟悉游戏、爆装备、打Portal。",
+                    "我最讨厌那种打完就走、不说话不互动的玩家。",
+                    "我在Ingress里谈过恋爱/交往/结婚。",
+                    "有时候我打活动只是为了见某个朋友而不是为了阵营。",
+                    "社群气氛比游戏本身更重要。",
+                    "我习惯学习和记录intel的变化，敌方的信息，构建和丰富我的游戏世界。",
+                    "我喜欢那种不做事先沟通，战斗当天通过简单有效的沟通，就可以帮助我们能够打赢比赛的指挥玩家。",
+                    "我曾为一次游戏行动写过很多文字和文档。",
+                    "我觉得‘胡乱link’是对其他玩家最大的不尊重。",
+                    "战斗中出错时，我更在意复盘过程而不是陷入情绪。",
+                    "能一人带队、当指挥、还打完收尾是我骄傲的事。"
+                ],
+                reverseQuestions: [0, 2]
+            },
+            {
+                name: "E. 技术官僚主义者（MOD建构者 / 战术控全图计划者）",
+                desc: "追求计划、优化、长期战略、工具理性",
+                questions: [
+                    "我曾经为了一个关键Portal等在原地超过1小时。",
+                    "冲突才是Ingress独特的魅力。",
+                    "我反感被‘老玩家’制定的规则束缚游戏行动。",
+                    "一切都是临场发挥，展现个性、即兴，ingress才好玩！",
+                    "我每天会主动打开游戏App至少3次，就算不出门。",
+                    "我会在旅游时优先选Ingress活跃城市。",
+                    "Ingress打多了，我已经能认出哪些符合标准的东西与事物是游戏内的Portal。",
+                    "我走路/骑车/开车的路线会因Portal分布而改变。",
+                    "Ingress让我改善了运动习惯和出门频率。",
+                    "现实工作的时候，我也会在思索与ingress有关联的游戏线路或任务。",
+                    "Ingress对我来说很重要，我有时候甚至会梦到它。",
+                    "如果Ingress停服，我会陷入短期抑郁。",
+                    "我曾经为了打大型比赛，取消或更改重要的生活安排。",
+                    "Ingress成为了一种生活方式，而不是一个手机游戏。"
+                ],
+                reverseQuestions: [1, 2, 3]
+            }
+        ];
+
+        const pointsMap = {
+            "1": 0, // 强烈反对
+            "2": 1, // 反对
+            "3": 2, // 中立
+            "4": 3, // 同意
+            "5": 4  // 强烈同意
+        };
+
+        let radarChart;
+
+        function initializeRadarChart() {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            radarChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: sections.map(s => s.name.split('（')[0]),
+                    datasets: [{
+                        label: '政治体质轮廓',
+                        data: sections.map(() => 0),
+                        fill: true,
+                        backgroundColor: 'rgba(0, 128, 0, 0.2)',
+                        borderColor: 'rgb(0, 128, 0)',
+                        pointBackgroundColor: 'rgb(0, 128, 0)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(0, 128, 0)'
+                    }]
+                },
+                options: {
+                    scales: {
+                        r: {
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { stepSize: 20 }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'top' },
+                        title: { display: true, text: '个人政治体质光谱' }
+                    }
+                }
+            });
+        }
+
+        function loadQuestions() {
+            const container = document.getElementById("questions");
+            const tableBody = document.querySelector("#summaryTable tbody");
+
+            sections.forEach((section, sectionIndex) => {
+                const sectionDiv = document.createElement("div");
+                sectionDiv.className = "section";
+                sectionDiv.innerHTML = `
+                    <div class="section-title">${section.name}</div>
+                    <div class="section-desc">${section.desc}</div>
+                `;
+                section.questions.forEach((q, qIndex) => {
+                    const globalIndex = sections.slice(0, sectionIndex).reduce((sum, s) => sum + s.questions.length, 0) + qIndex;
+                    const div = document.createElement("div");
+                    div.className = "question";
+                    div.innerHTML = `
+                        <p>${q}</p>
+                        <div class="options">
+                            <label><input type="radio" name="q${globalIndex}" value="1" onchange="updateCounts(${sectionIndex})"> 强烈反对</label>
+                            <label><input type="radio" name="q${globalIndex}" value="2" onchange="updateCounts(${sectionIndex})"> 反对</label>
+                            <label><input type="radio" name="q${globalIndex}" value="3" onchange="updateCounts(${sectionIndex})"> 中立</label>
+                            <label><input type="radio" name="q${globalIndex}" value="4" onchange="updateCounts(${sectionIndex})"> 同意</label>
+                            <label><input type="radio" name="q${globalIndex}" value="5" onchange="updateCounts(${sectionIndex})"> 强烈同意</label>
+                        </div>
+                    `;
+                    sectionDiv.appendChild(div);
+                });
+                const countsDiv = document.createElement("div");
+                countsDiv.className = "counts";
+                countsDiv.id = `counts-${sectionIndex}`;
+                countsDiv.innerHTML = "Points: 0 / 0 = 0.0%";
+                sectionDiv.appendChild(countsDiv);
+                container.appendChild(sectionDiv);
+
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${section.name}</td>
+                    <td id="table-points-${sectionIndex}">0 / 0 = 0.0%</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            initializeRadarChart();
+        }
+
+        function updateCounts(sectionIndex) {
+            const section = sections[sectionIndex];
+            const globalStart = sections.slice(0, sectionIndex).reduce((sum, s) => sum + s.questions.length, 0);
+            const counts = { "1": 0, "2": 0, "3": 0, "4": 0, "5": 0 };
+            let totalPoints = 0;
+            const maxPoints = section.questions.length * 4;
+
+            for (let i = 0; i < section.questions.length; i++) {
+                const selected = document.querySelector(`input[name="q${globalStart + i}"]:checked`);
+                if (selected) {
+                    const value = selected.value;
+                    counts[value]++;
+                    const isReverse = section.reverseQuestions.includes(i);
+                    const points = isReverse ? 4 - pointsMap[value] : pointsMap[value];
+                    totalPoints += points;
+                }
+            }
+
+            const percentage = maxPoints > 0 ? ((totalPoints / maxPoints) * 100).toFixed(1) : 0.0;
+            const countsDiv = document.getElementById(`counts-${sectionIndex}`);
+            countsDiv.innerHTML = `Points: ${totalPoints} / ${maxPoints} = ${percentage}%`;
+
+            document.getElementById(`table-points-${sectionIndex}`).textContent = `${totalPoints} / ${maxPoints} = ${percentage}%`;
+
+            updateRadarChart();
+        }
+
+        function updateRadarChart() {
+            const data = sections.map((section, sectionIndex) => {
+                const globalStart = sections.slice(0, sectionIndex).reduce((sum, s) => sum + s.questions.length, 0);
+                let totalPoints = 0;
+                const maxPoints = section.questions.length * 4;
+                for (let i = 0; i < section.questions.length; i++) {
+                    const selected = document.querySelector(`input[name="q${globalStart + i}"]:checked`);
+                    if (selected) {
+                        const isReverse = section.reverseQuestions.includes(i);
+                        const points = isReverse ? 4 - pointsMap[selected.value] : pointsMap[selected.value];
+                        totalPoints += points;
+                    }
+                }
+                return maxPoints > 0 ? (totalPoints / maxPoints) * 100 : 0;
+            });
+
+            radarChart.data.datasets[0].data = data;
+            radarChart.update();
+        }
+
+        window.onload = loadQuestions;
+    </script>
+</body>
+</html>
